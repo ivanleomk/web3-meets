@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import LoginButton from "./LoginButton";
+import MobileLoginButton from "./MobileLoginButton";
 
 const options = [
   {
@@ -98,9 +99,7 @@ const Header = () => {
                 </div>
               </div>
               <div className="py-6 px-5">
-                <div className="mt-6">
-                  <LoginButton />
-                </div>
+                <MobileLoginButton />
               </div>
             </div>
           </Popover.Panel>
