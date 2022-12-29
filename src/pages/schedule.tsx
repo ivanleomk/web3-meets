@@ -1,4 +1,5 @@
 import { CalendarIcon, MapPinIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 import Calendar from "../components/Calendar";
 
 const meetings = [
@@ -38,12 +39,11 @@ const Schedule = () => {
         <div className="mt-10 text-center lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:mt-9 xl:col-start-9">
           <div className="sticky top-36">
             <Calendar />
-            <button
-              type="button"
-              className="mt-8 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Add event
-            </button>
+            <Link href="/add-event" className="mt-8">
+              <p className="mt-8 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Add event
+              </p>
+            </Link>
           </div>
         </div>
         <ol className="mt-4 divide-y divide-gray-100 overflow-auto text-sm leading-6 lg:col-span-7 xl:col-span-8">
