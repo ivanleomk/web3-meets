@@ -11,6 +11,7 @@ import { trpc } from "../utils/trpc";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/globals.css";
+import Generic from "../layout/Generic";
 
 function MyApp({
   Component,
@@ -27,7 +28,9 @@ function MyApp({
       initialSession={pageProps.initialSession}
     >
       <ToastContainer />
-      <Component {...pageProps} />
+      <Generic>
+        <Component {...pageProps} />
+      </Generic>
     </SessionContextProvider>
   );
 }

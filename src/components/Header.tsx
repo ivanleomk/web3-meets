@@ -21,6 +21,10 @@ const options = [
     name: "About",
     link: "/about-us",
   },
+  {
+    name: "Schedule",
+    link: "/schedule",
+  },
 ];
 
 const Header = () => {
