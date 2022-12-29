@@ -78,6 +78,7 @@ const Calendar = () => {
         <div>S</div>
         <div>S</div>
       </div>
+      {`current element count : ${days.length}`}
       <div className="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
         {days.map((day, dayIdx) => {
           return (
