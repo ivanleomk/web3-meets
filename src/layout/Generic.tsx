@@ -14,7 +14,7 @@ const Generic = ({ children }: GenericProps) => {
   return (
     <>
       <Header />
-      <div className="mx-auto max-w-6xl">{children}</div>
+      <div className="mx-auto max-w-6xl px-4">{children}</div>
       <Footer />
     </>
   );
