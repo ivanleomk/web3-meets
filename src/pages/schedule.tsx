@@ -16,7 +16,7 @@ const meetings = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elementum ante quis enim consequat volutpat. Pellentesque id dignissim mauris. Maecenas quis mauris enim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Duis eget sagittis odio. Praesent volutpat enim vitae vestibulum sodales. Nullam iaculis augue leo, id cursus ligula auctor a. Fusce sagittis mauris eget elementum venenatis. Cras venenatis ex id mollis commodo.",
   },
   {
-    id: 1,
+    id: 2,
     date: "January 10th, 2022",
     time: "5:00 PM",
     datetime: "2022-01-10T17:00",
@@ -47,70 +47,67 @@ const Schedule = () => {
           </div>
         </div>
         <ol className="mt-4 divide-y divide-gray-100 overflow-auto text-sm leading-6 lg:col-span-7 xl:col-span-8">
-          {meetings
-            .concat(meetings)
-            .concat(meetings.concat(meetings))
-            .map((meeting) => (
-              <li
-                key={meeting.id}
-                className="relative grid grid-cols-5 space-x-6 py-6 xl:static"
-              >
-                <img src={meeting.imageUrl} alt="" className="col-span-2" />
-                <div className="col-span-3">
-                  <div>
-                    <h3 className="pr-10 font-semibold text-gray-900 xl:pr-0">
-                      {meeting.name}
-                    </h3>
-                    {meeting.tags?.map((item) => (
-                      <span
-                        key={item.name}
-                        className="mr-2 inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800"
+          {meetings.map((meeting) => (
+            <li
+              key={meeting.id}
+              className="relative grid grid-cols-5 space-x-6 py-6 xl:static"
+            >
+              <img src={meeting.imageUrl} alt="" className="col-span-2" />
+              <div className="col-span-3">
+                <div>
+                  <h3 className="pr-10 font-semibold text-gray-900 xl:pr-0">
+                    {meeting.name}
+                  </h3>
+                  {meeting.tags?.map((item) => (
+                    <span
+                      key={item.name}
+                      className="mr-2 inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800"
+                    >
+                      <svg
+                        className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400"
+                        fill="currentColor"
+                        viewBox="0 0 8 8"
                       >
-                        <svg
-                          className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400"
-                          fill="currentColor"
-                          viewBox="0 0 8 8"
-                        >
-                          <circle cx={4} cy={4} r={3} />
-                        </svg>
-                        {item.name}
-                      </span>
-                    ))}
-                  </div>
-                  <dl className="mt-2 flex flex-col text-gray-500 xl:flex-row">
-                    <div className="flex items-start space-x-3">
-                      <dt className="mt-0.5">
-                        <span className="sr-only">Date</span>
-                        <CalendarIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </dt>
-                      <dd>
-                        <time dateTime={meeting.datetime}>
-                          {meeting.date} at {meeting.time}
-                        </time>
-                      </dd>
-                    </div>
-                    <div className="mt-2 flex items-start space-x-3 xl:mt-0 xl:ml-3.5 xl:border-l xl:border-gray-400 xl:border-opacity-50 xl:pl-3.5">
-                      <dt className="mt-0.5">
-                        <span className="sr-only">Location</span>
-                        <MapPinIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </dt>
-                      <dd>{meeting.location}</dd>
-                    </div>
-                  </dl>
-                  <p className="mt-3 text-gray-500">
-                    {meeting.description.length > 200
-                      ? meeting.description.slice(0, 150) + "..."
-                      : meeting.description}
-                  </p>
+                        <circle cx={4} cy={4} r={3} />
+                      </svg>
+                      {item.name}
+                    </span>
+                  ))}
                 </div>
-              </li>
-            ))}
+                <dl className="mt-2 flex flex-col text-gray-500 xl:flex-row">
+                  <div className="flex items-start space-x-3">
+                    <dt className="mt-0.5">
+                      <span className="sr-only">Date</span>
+                      <CalendarIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </dt>
+                    <dd>
+                      <time dateTime={meeting.datetime}>
+                        {meeting.date} at {meeting.time}
+                      </time>
+                    </dd>
+                  </div>
+                  <div className="mt-2 flex items-start space-x-3 xl:mt-0 xl:ml-3.5 xl:border-l xl:border-gray-400 xl:border-opacity-50 xl:pl-3.5">
+                    <dt className="mt-0.5">
+                      <span className="sr-only">Location</span>
+                      <MapPinIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </dt>
+                    <dd>{meeting.location}</dd>
+                  </div>
+                </dl>
+                <p className="mt-3 text-gray-500">
+                  {meeting.description.length > 200
+                    ? meeting.description.slice(0, 150) + "..."
+                    : meeting.description}
+                </p>
+              </div>
+            </li>
+          ))}
         </ol>
       </div>
     </div>

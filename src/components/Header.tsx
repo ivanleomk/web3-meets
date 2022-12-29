@@ -1,9 +1,7 @@
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
-import { useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Fragment } from "react";
 import LoginButton from "./LoginButton";
 import MobileLoginButton from "./MobileLoginButton";

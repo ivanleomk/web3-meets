@@ -23,7 +23,6 @@ const CalendarCell = ({
 }: CalendarCellProps) => {
   return (
     <button
-      key={date}
       onClick={onClickHandler}
       className={joinClassNames(
         "py-1.5 hover:bg-gray-100 focus:z-10",

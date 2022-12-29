@@ -83,7 +83,7 @@ const Calendar = () => {
           return (
             <CalendarCell
               onClickHandler={() => setSelectedDay(new Date(day.date))}
-              key={dayIdx}
+              key={`${day.date}-${dayIdx}`}
               isSelected={compareTwoDates(selectedDay, new Date(day.date))}
               isCurrentMonth={isCurrentMonth(
                 new Date(day.date),
