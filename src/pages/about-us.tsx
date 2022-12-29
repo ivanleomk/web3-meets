@@ -16,8 +16,6 @@ export default function Example() {
   return (
     <>
       <div className="relative overflow-hidden">
-        <Header />
-
         <div className="bg-white">
           <div className="mx-auto max-w-7xl  px-4 sm:px-6 lg:px-8 lg:py-24">
             <div className="space-y-12 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
