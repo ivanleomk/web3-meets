@@ -6,7 +6,7 @@ export const getCalendarDates = (
   selectedDate: Date,
   today: Date
 ) => {
-  const formattedDateString = `${year}-${month}-01`;
+  const formattedDateString = `${year}-${month.padStart(2, "0")}-01`;
 
   const date = new Date(formattedDateString);
 
