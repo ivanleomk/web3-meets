@@ -17,9 +17,9 @@ export const sendMagicLink = async (
   if (error) {
     toast.warning(error.message);
   } else {
-    toast.success(message);
-    supabase.from("user").insert({ id: email });
+    const insertResult = await supabase.from("user").insert({ id: email });
     // Insert into the existing users table
+    console.log(insertResult);
   }
 };
 
