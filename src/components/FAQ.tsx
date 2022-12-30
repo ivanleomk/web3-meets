@@ -24,7 +24,7 @@ export default function FAQ() {
             Frequently asked questions
           </h2>
           <p className="mt-4 text-base text-gray-500">
-            If you can't find what you're looking for, you can always{" "}
+            If you can&apos;t find what you&apos;re looking for, you can always{" "}
             <a
               href="#"
               className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -37,7 +37,7 @@ export default function FAQ() {
 
         <dl className="mt-12 grid grid-cols-1 gap-y-10 sm:mt-16 md:grid-cols-2 md:gap-x-6 lg:grid-cols-3">
           {faqs.map((faq) => (
-            <div key={faq.id}>
+            <div key={faq.answer}>
               <dt className="text-base font-medium text-gray-900">
                 {faq.question}
               </dt>
