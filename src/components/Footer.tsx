@@ -11,8 +11,11 @@ const Footer = () => {
         <p className="mt-5 text-center text-sm leading-6 text-slate-500">
           © 2022-2023 Web3Meets Inc. All rights reserved.
         </p>
-        <div className="mt-16 flex items-center justify-center space-x-4 text-sm font-semibold leading-6 text-slate-700">
-          <p>Helping build Singapore&apos;s crypto community</p>
+        <div className="mt-2 flex items-center justify-center space-x-4 text-sm font-semibold leading-6 text-slate-700">
+          <p>
+            Empowering people to build community and for web3 to bring the world
+            closer together
+          </p>
         </div>
       </div>
     </footer>

@@ -11,6 +11,8 @@ import { trpc } from "../utils/trpc";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/globals.css";
+
+import "react-datepicker/dist/react-datepicker.css";
 import Generic from "../layout/Generic";
 
 function MyApp({

@@ -9,11 +9,15 @@ import {
 } from "../utils/date";
 import CalendarCell from "./CalendarCell";
 
-const Calendar = () => {
+type CalendarProps = {
+  selectedDay: Date;
+  setSelectedDay: (d: Date) => void;
+};
+
+const Calendar = ({ selectedDay, setSelectedDay }: CalendarProps) => {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1);
-  const [selectedDay, setSelectedDay] = useState(today);
 
   const days = getCalendarDates(
     currentYear.toString(),

@@ -17,7 +17,7 @@ export const sendMagicLink = async (
   if (error) {
     toast.warning(error.message);
   } else {
-    const insertResult = await supabase.from("user").upsert({ id: email });
+    const insertResult = await supabase.from("User").upsert({ id: email });
     // Insert into the existing users table
     if (insertResult.error) {
       toast.warning(insertResult.error.message);
@@ -29,7 +29,7 @@ export const sendMagicLink = async (
 
 export const checkUserExists = async (email: string) => {
   const { data, error } = await supabase
-    .from("user")
+    .from("User")
     .select("id")
     .eq("id", email);
 
@@ -42,14 +42,4 @@ export const checkUserExists = async (email: string) => {
       return false;
     }
   }
-};
-
-export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
-    toast.warning(error.message);
-  }
-
-  // Remove the user from the local storage
 };

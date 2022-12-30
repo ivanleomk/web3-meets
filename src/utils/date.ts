@@ -67,3 +67,11 @@ export const isCurrentMonth = (
 ) => {
   return format(new Date(date), "M-yyyy") === `${currentMonth}-${currentYear}`;
 };
+
+export const formatDateMonth = (d: Date) => {
+  return format(d, "MMMM dd");
+};
+
+export const formatDateTime = (d: Date) => {
+  return format(d, "h:mm bb");
+};

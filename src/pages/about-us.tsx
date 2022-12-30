@@ -10,6 +10,22 @@ const people = [
     bio: "I build cool stuff from time to time, fixed up this website. Exploring an interest in Smart Contract Auditing",
     twitterUrl: "https://twitter.com/ivanleomk",
   },
+  {
+    name: "Gen Doo",
+    role: "xx",
+    imageUrl:
+      "https://static.wixstatic.com/media/4f1588_51f5fb8ce8ad478ca0757cbbb2ddf968~mv2.jpeg/v1/crop/x_221,y_267,w_444,h_445/fill/w_400,h_400,al_c,q_95,usm_0.66_1.00_0.01,enc_auto/photo1663572387.jpeg",
+    bio: "bio goes here",
+    twitterUrl: "https://twitter.com/genedoo",
+  },
+  {
+    name: "Gen Doo",
+    role: "xx",
+    imageUrl:
+      "https://static.wixstatic.com/media/4f1588_3bb041c561154c3daf337a1f2c111d6d~mv2.jpeg/v1/crop/x_78,y_439,w_413,h_413/fill/w_400,h_400,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/photo1663572193.jpeg",
+    bio: "bio goes here",
+    twitterUrl: "https://twitter.com/0xtraderjones",
+  },
 ];
 
 export default function Example() {
@@ -53,6 +69,8 @@ export default function Example() {
                         <ul role="list" className="flex space-x-5">
                           <li>
                             <a
+                              target="_blank"
+                              rel="noopener noreferrer"
                               href={person.twitterUrl}
                               className="text-gray-400 hover:text-gray-500"
                             >
