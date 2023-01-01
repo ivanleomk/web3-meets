@@ -28,7 +28,7 @@ const people = [
   },
 ];
 
-export default function Example() {
+export default function AboutUs() {
   return (
     <>
       <div className="relative overflow-hidden">

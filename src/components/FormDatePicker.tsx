@@ -5,34 +5,32 @@ import {
   type FormikErrors,
   useFormikContext,
 } from "formik";
-import { type EventFormState } from "../types/reactForm";
-import { sub } from "date-fns";
 
-type FormDatePickerProps = {
+type FormDatePickerProps<T> = {
   label: string;
-  value: Date;
-  formKey: keyof EventFormState;
-  errors: FormikErrors<EventFormState>;
+  value: Date | null;
+  formKey: keyof T;
+  errors: FormikErrors<T>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleBlur: any;
-  touched: FormikTouched<EventFormState>;
+  touched: FormikTouched<T>;
   fullWidth?: boolean;
 };
 
-const FormDatePicker = ({
+const FormDatePicker = <T,>({
   label,
   formKey,
   errors,
   handleBlur,
   touched,
   value,
-}: FormDatePickerProps) => {
+}: FormDatePickerProps<T>) => {
   const { setFieldValue } = useFormikContext();
   return (
     <div className="sm:col-span-3">
       <label
         htmlFor="first-name"
-        className="block text-sm font-medium text-gray-700"
+        className="block text-sm font-bold text-gray-700"
       >
         {label}
       </label>
@@ -41,13 +39,15 @@ const FormDatePicker = ({
           className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           selected={value}
           onChange={(val) => {
-            setFieldValue(formKey, val);
+            console.log(val);
+            setFieldValue(formKey as string, val);
           }}
           onBlur={handleBlur}
-          name={formKey}
+          name={formKey as string}
           dateFormat="Pp"
-          minDate={sub(new Date(), { days: 1 })}
+          minDate={new Date()}
           showTimeSelect
+          placeholderText="DD/MM/YYYY"
         />
       </div>
       <p className="text-sm text-red-300 ">

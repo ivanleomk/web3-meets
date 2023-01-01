@@ -7,10 +7,6 @@ import LoginButton from "./LoginButton";
 import MobileLoginButton from "./MobileLoginButton";
 
 const options = [
-  // {
-  //   name: "Blog",
-  //   link: "/blog",
-  // },
   {
     name: "About",
     link: "/about-us",
@@ -18,6 +14,14 @@ const options = [
   {
     name: "Events",
     link: "/events",
+  },
+  {
+    name: "FAQ",
+    link: "/faq",
+  },
+  {
+    name: "Schedule",
+    link: "/schedule",
   },
 ];
 
