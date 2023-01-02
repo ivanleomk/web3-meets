@@ -5,8 +5,8 @@ import { type EventFormState } from "../types/reactForm";
 type RadioGroupProps = {
   label: string;
   options: {
-    id: string;
-    title: string;
+    value: string;
+    label: string;
   }[];
   formKey: keyof EventFormState;
   errors: FormikErrors<EventFormState>;
@@ -33,20 +33,21 @@ const FormInputRadioGroup = ({
         <legend className="sr-only">{label}</legend>
         <div className="space-y-4">
           {options.map((option) => (
-            <div key={option.id} className="flex items-center">
+            <div key={option.label} className="flex items-center">
               <input
-                checked={option.id === value}
+                id={option.value}
+                checked={option.value === value}
                 className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 type="radio"
                 name={formKey}
-                value={option.id}
+                value={option.value}
                 onChange={handleChange}
               />
               <label
-                htmlFor={option.id}
+                htmlFor={option.value}
                 className="ml-3 block text-sm font-medium text-gray-700"
               >
-                {option.title}
+                {option.label}
               </label>
             </div>
           ))}

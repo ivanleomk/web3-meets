@@ -1,66 +1,78 @@
+import { useUser } from "@supabase/auth-helpers-react";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
-import { initialFormState, type EventFormState } from "../types/reactForm";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import {
+  EventCost,
+  type EventFormErrors,
+  EventType,
+  initialFormState,
+  type EventFormState,
+} from "../types/reactForm";
+import EventCard from "./EventCard";
 import FormDatePicker from "./FormDatePicker";
+import FormImageField from "./FormImageField";
 import FormInputField from "./FormInputField";
 import FormInputRadioGroup from "./FormInputRadioGroup";
 import FormTextArea from "./FormTextArea";
 
 type EventFormProps = {
-  onSubmit: (data: EventFormState) => void;
+  onSubmit: (data: EventFormState) => Promise<void>;
   eventData?: EventFormState;
 };
-
-type EventFormErrors = Partial<{
-  [key in keyof EventFormState]: string;
-}>;
 
 const EventForm = ({
   onSubmit,
   eventData = initialFormState,
 }: EventFormProps) => {
   const router = useRouter();
+
   return (
     <Formik
       initialValues={eventData}
       validate={(values) => {
         const errors: EventFormErrors = {};
 
-        if (!values.eventName) {
-          errors.eventName = "Event name is required";
+        if (!values.title) {
+          errors.title = "Event name is required";
         }
-        if (!values.eventDescription) {
-          errors.eventDescription =
+        if (!values.description) {
+          errors.description =
             "Please provide a short description of the event that you're submitting to be listed on the site.";
         }
-        if (!values.location) {
+        if (!values.location && values.online == EventType.INPERSON) {
           errors.location = "Please provide the location of the event";
         }
 
-        if (!values.eventStart) {
-          errors.eventStart = "Please provide the start date of the event";
+        if (!values.startTime) {
+          errors.startTime = "Please provide the start date of the event";
         }
 
-        if (!values.eventEnd) {
-          errors.eventEnd = "Please provide the end date of the event";
+        if (!values.endTime) {
+          errors.endTime = "Please provide the end date of the event";
         }
 
         if (
-          values.eventStart &&
-          values.eventEnd &&
-          values.eventStart > values.eventEnd
+          values.startTime &&
+          values.endTime &&
+          values.startTime > values.endTime
         ) {
-          errors.eventEnd = "Event end date cannot be before the start date";
+          errors.endTime = "Event end date cannot be before the start date";
         }
 
-        if (!values.eventImage) {
-          errors.eventImage = "Please provide an image for the event";
+        if (!values.image) {
+          errors.image = "Please provide an image for the event";
         }
+
+        console.log(Object.keys(errors));
 
         return errors;
       }}
-      onSubmit={(values, { setSubmitting }) => {
-        onSubmit(values);
+      onSubmit={(values, { setSubmitting, resetForm }) => {
+        // Error is automatically propogated via a toast, we only ned to reset on success
+        onSubmit(values).then((_) => resetForm());
+
         setSubmitting(false);
       }}
     >
@@ -87,13 +99,22 @@ const EventForm = ({
                 </div>
                 <div className="mt-6 gap-y-6 gap-x-4  sm:grid sm:grid-cols-6">
                   <FormInputField
-                    value={values.eventName}
+                    value={values.title}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventName"
+                    formKey="title"
                     label="Name"
+                  />
+                  <FormInputField
+                    value={values.url}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    errors={errors}
+                    touched={touched}
+                    formKey="url"
+                    label="Event Link"
                   />
                   <FormInputField
                     value={values.location}
@@ -103,72 +124,113 @@ const EventForm = ({
                     touched={touched}
                     formKey="location"
                     label="Location / URL"
+                    fullWidth={true}
+                    description="Leave blank if online event"
                   />
-                  <FormTextArea
-                    value={values.eventDescription}
+                  <FormInputField
+                    value={values.organiserName}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventDescription"
+                    formKey="organiserName"
+                    label="Organiser Name"
+                    fullWidth={true}
+                    description=""
+                  />
+                  <FormTextArea
+                    value={values.description}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    errors={errors}
+                    touched={touched}
+                    formKey="description"
                     label="Description"
                   />
                   <FormDatePicker
                     label="Event Start"
-                    value={values.eventStart}
+                    value={values.startTime}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventStart"
+                    formKey="startTime"
                   />
                   <FormDatePicker
                     label="Event End"
-                    value={values.eventEnd}
+                    value={values.endTime}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventEnd"
+                    formKey="endTime"
                   />
-                  <FormInputField
-                    value={values.eventImage}
-                    handleChange={handleChange}
+                  <FormImageField
+                    label="Banner Image"
+                    value={values.image}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventImage"
-                    label="Banner Image"
-                    fullWidth={true}
+                    handleChange={handleChange}
+                    formKey="image"
                   />
                   <FormInputRadioGroup
                     label="Event Cost"
                     options={[
-                      { id: "free", title: "Free" },
-                      { id: "Paid", title: "Paid" },
+                      { value: EventCost.FREE, label: "Free" },
+                      { value: EventCost.PAID, label: "Paid" },
                     ]}
-                    value={values.eventCost}
+                    value={values.freeEvent}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventCost"
+                    formKey="freeEvent"
                   />
                   <FormInputRadioGroup
                     label="Event Location"
                     options={[
-                      { id: "online", title: "Online" },
-                      { id: "physical", title: "Physical" },
+                      { value: EventType.ONLINE, label: "Online" },
+                      { value: EventType.INPERSON, label: "In Person" },
                     ]}
-                    value={values.eventType}
+                    value={values.online}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     errors={errors}
                     touched={touched}
-                    formKey="eventType"
+                    formKey="online"
                   />
                 </div>
               </div>
             </div>
           </div>
+          <div className="pt-8">
+            <div>
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Preview Your Listing
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Here&apos;s a quick preview of what your listing will look like
+                once it&apos;s approved
+              </p>
+            </div>
+            <div className="mx-auto mt-10">
+              {Object.keys(errors).length == 0 ? (
+                <EventCard
+                  event={{
+                    ...values,
+                    startTime: values.startTime ? values.startTime : new Date(),
+                    endTime: values.startTime ? values.startTime : new Date(),
+                    freeEvent: values.freeEvent === EventCost.FREE,
+                    online: values.online === EventType.ONLINE,
+                  }}
+                />
+              ) : (
+                <p className="text-sm text-red-500">
+                  Please fix the existing errors in your listing
+                </p>
+              )}
+            </div>
+          </div>
+
           <div className="pt-5">
             <div className="flex justify-end">
               <button
@@ -189,353 +251,6 @@ const EventForm = ({
         </form>
       )}
     </Formik>
-    // <form onSubmit={(e) => onSubmit} className="space-y-8 px-4 ">
-    //   <div className="space-y-8 ">
-    //     <div>
-    //       <div className="pt-8">
-    //         <div>
-    //           <h3 className="text-lg font-medium leading-6 text-gray-900">
-    //             Event Details
-    //           </h3>
-    //           <p className="mt-1 text-sm text-gray-500">
-    //             Help us know more about the event that you&apos;re organising
-    //           </p>
-    //         </div>
-    //         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-    //           <div className="sm:col-span-3">
-    //             <label
-    //               htmlFor="first-name"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               Event Name
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 type="text"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-3">
-    //             <label
-    //               htmlFor="last-name"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               Event Location
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 type="text"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-4">
-    //             <label
-    //               htmlFor="email"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               Email address
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 id="email"
-    //                 name="email"
-    //                 type="email"
-    //                 autoComplete="email"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-3">
-    //             <label
-    //               htmlFor="country"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               Country
-    //             </label>
-    //             <div className="mt-1">
-    //               <select
-    //                 id="country"
-    //                 name="country"
-    //                 autoComplete="country-name"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               >
-    //                 <option>United States</option>
-    //                 <option>Canada</option>
-    //                 <option>Mexico</option>
-    //               </select>
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-6">
-    //             <label
-    //               htmlFor="street-address"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               Street address
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 type="text"
-    //                 name="street-address"
-    //                 id="street-address"
-    //                 autoComplete="street-address"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-2">
-    //             <label
-    //               htmlFor="city"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               City
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 type="text"
-    //                 name="city"
-    //                 id="city"
-    //                 autoComplete="address-level2"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-2">
-    //             <label
-    //               htmlFor="region"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               State / Province
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 type="text"
-    //                 name="region"
-    //                 id="region"
-    //                 autoComplete="address-level1"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="sm:col-span-2">
-    //             <label
-    //               htmlFor="postal-code"
-    //               className="block text-sm font-medium text-gray-700"
-    //             >
-    //               ZIP / Postal code
-    //             </label>
-    //             <div className="mt-1">
-    //               <input
-    //                 type="text"
-    //                 name="postal-code"
-    //                 id="postal-code"
-    //                 autoComplete="postal-code"
-    //                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    //               />
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </div>
-
-    //       <div className="pt-8">
-    //         <div>
-    //           <h3 className="text-lg font-medium leading-6 text-gray-900">
-    //             Notifications
-    //           </h3>
-    //           <p className="mt-1 text-sm text-gray-500">
-    //             We'll always let you know about important changes, but you pick
-    //             what else you want to hear about.
-    //           </p>
-    //         </div>
-    //         <div className="mt-6">
-    //           <fieldset>
-    //             <legend className="sr-only">By Email</legend>
-    //             <div
-    //               className="text-base font-medium text-gray-900"
-    //               aria-hidden="true"
-    //             >
-    //               By Email
-    //             </div>
-    //             <div className="mt-4 space-y-4">
-    //               <div className="relative flex items-start">
-    //                 <div className="flex h-5 items-center">
-    //                   <input
-    //                     id="comments"
-    //                     name="comments"
-    //                     type="checkbox"
-    //                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-    //                   />
-    //                 </div>
-    //                 <div className="ml-3 text-sm">
-    //                   <label
-    //                     htmlFor="comments"
-    //                     className="font-medium text-gray-700"
-    //                   >
-    //                     Comments
-    //                   </label>
-    //                   <p className="text-gray-500">
-    //                     Get notified when someones posts a comment on a posting.
-    //                   </p>
-    //                 </div>
-    //               </div>
-    //               <div className="relative flex items-start">
-    //                 <div className="flex h-5 items-center">
-    //                   <input
-    //                     id="candidates"
-    //                     name="candidates"
-    //                     type="checkbox"
-    //                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-    //                   />
-    //                 </div>
-    //                 <div className="ml-3 text-sm">
-    //                   <label
-    //                     htmlFor="candidates"
-    //                     className="font-medium text-gray-700"
-    //                   >
-    //                     Candidates
-    //                   </label>
-    //                   <p className="text-gray-500">
-    //                     Get notified when a candidate applies for a job.
-    //                   </p>
-    //                 </div>
-    //               </div>
-    //               <div className="relative flex items-start">
-    //                 <div className="flex h-5 items-center">
-    //                   <input
-    //                     id="offers"
-    //                     name="offers"
-    //                     type="checkbox"
-    //                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-    //                   />
-    //                 </div>
-    //                 <div className="ml-3 text-sm">
-    //                   <label
-    //                     htmlFor="offers"
-    //                     className="font-medium text-gray-700"
-    //                   >
-    //                     Offers
-    //                   </label>
-    //                   <p className="text-gray-500">
-    //                     Get notified when a candidate accepts or rejects an
-    //                     offer.
-    //                   </p>
-    //                 </div>
-    //               </div>
-    //             </div>
-    //           </fieldset>
-    //           <fieldset className="mt-6">
-    //             <legend className="contents text-base font-medium text-gray-900">
-    //               Push Notifications
-    //             </legend>
-    //             <p className="text-sm text-gray-500">
-    //               These are delivered via SMS to your mobile phone.
-    //             </p>
-    //             <div className="mt-4 space-y-4">
-    //               <div className="flex items-center">
-    //                 <input
-    //                   id="push-everything"
-    //                   name="push-notifications"
-    //                   type="radio"
-    //                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-    //                 />
-    //                 <label
-    //                   htmlFor="push-everything"
-    //                   className="ml-3 block text-sm font-medium text-gray-700"
-    //                 >
-    //                   Everything
-    //                 </label>
-    //               </div>
-    //               <div className="flex items-center">
-    //                 <input
-    //                   id="push-email"
-    //                   name="push-notifications"
-    //                   type="radio"
-    //                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-    //                 />
-    //                 <label
-    //                   htmlFor="push-email"
-    //                   className="ml-3 block text-sm font-medium text-gray-700"
-    //                 >
-    //                   Same as email
-    //                 </label>
-    //               </div>
-    //               <div className="flex items-center">
-    //                 <input
-    //                   id="push-nothing"
-    //                   name="push-notifications"
-    //                   type="radio"
-    //                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-    //                 />
-    //                 <label
-    //                   htmlFor="push-nothing"
-    //                   className="ml-3 block text-sm font-medium text-gray-700"
-    //                 >
-    //                   No push notifications
-    //                 </label>
-    //               </div>
-    //             </div>
-    //           </fieldset>
-    //         </div>
-    //       </div>
-    //     </div>
-
-    //     <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-    //       <div className="sm:col-span-6">
-    //         <label
-    //           htmlFor="cover-photo"
-    //           className="block text-sm font-medium text-gray-700"
-    //         >
-    //           Cover photo
-    //         </label>
-    //         <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-    //           <div className="space-y-1 text-center">
-    //             <svg
-    //               className="mx-auto h-12 w-12 text-gray-400"
-    //               stroke="currentColor"
-    //               fill="none"
-    //               viewBox="0 0 48 48"
-    //               aria-hidden="true"
-    //             >
-    //               <path
-    //                 d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-    //                 strokeWidth={2}
-    //                 strokeLinecap="round"
-    //                 strokeLinejoin="round"
-    //               />
-    //             </svg>
-    //             <div className="flex text-sm text-gray-600">
-    //               <label
-    //                 htmlFor="file-upload"
-    //                 className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-    //               >
-    //                 <span>Upload a file</span>
-    //                 <input
-    //                   id="file-upload"
-    //                   name="file-upload"
-    //                   type="file"
-    //                   className="sr-only"
-    //                 />
-    //               </label>
-    //               <p className="pl-1">or drag and drop</p>
-    //             </div>
-    //             <p className="text-xs text-gray-500">
-    //               PNG, JPG, GIF up to 10MB
-    //             </p>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    // </form>
   );
 };
 

@@ -1,23 +1,39 @@
+export enum EventType {
+  INPERSON = "INPERSON",
+  ONLINE = "ONLINE",
+}
+
+export enum EventCost {
+  FREE = "FREE",
+  PAID = "PAID",
+}
+
 export type EventFormState = {
-  eventName: string;
-  eventStart: Date;
-  eventEnd: Date;
-  eventDescription: string;
+  title: string;
+  startTime: Date | null;
+  endTime: Date | null;
+  description: string;
+  url: string;
   location: string;
-  eventImage: string;
-  // Free or Paid
-  eventCost: string;
-  // Online or In-Person
-  eventType: string;
+  image: string;
+  freeEvent: EventCost;
+  online: EventType;
+  organiserName: string;
 };
 
 export const initialFormState: EventFormState = {
-  eventName: "",
-  eventStart: new Date(),
-  eventEnd: new Date(),
-  eventDescription: "",
+  title: "",
+  startTime: null,
+  endTime: null,
+  description: "",
+  url: "",
   location: "",
-  eventImage: "",
-  eventCost: "free",
-  eventType: "online",
+  image: "",
+  freeEvent: EventCost.FREE,
+  online: EventType.INPERSON,
+  organiserName: "",
 };
+
+export type EventFormErrors = Partial<{
+  [key in keyof EventFormState]: string;
+}>;
