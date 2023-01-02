@@ -1,21 +1,21 @@
 import React from "react";
 import { type FormikTouched, type FormikErrors } from "formik";
-import { type EventFormState } from "../types/reactForm";
 
-type FormInputFieldProps = {
+type FormInputFieldProps<T> = {
   label: string;
-  formKey: keyof EventFormState;
-  errors: FormikErrors<EventFormState>;
+  formKey: keyof T;
+  errors: FormikErrors<T>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleChange: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleBlur: any;
   value: string | number | readonly string[] | undefined;
-  touched: FormikTouched<EventFormState>;
+  touched: FormikTouched<T>;
   fullWidth?: boolean;
+  description?: string;
 };
 
-const FormInputField = ({
+const FormInputField = <T,>({
   label,
   formKey,
   errors,
@@ -24,7 +24,8 @@ const FormInputField = ({
   touched,
   value,
   fullWidth = false,
-}: FormInputFieldProps) => {
+  description = "",
+}: FormInputFieldProps<T>) => {
   const styling = fullWidth
     ? "col-span-1 sm:col-span-6"
     : "col-span-1 sm:col-span-3";
@@ -37,17 +38,18 @@ const FormInputField = ({
         >
           {label}
         </label>
+
         <div className="mt-1">
           <input
             value={value}
             onChange={handleChange}
             onBlur={handleBlur}
-            name={formKey}
+            name={formKey as string}
             type="text"
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
         </div>
-
+        <p className="block text-xs font-medium text-gray-500">{description}</p>
         <p className="text-sm text-red-300 ">
           {errors?.[formKey] && touched?.[formKey]
             ? (errors[formKey] as string)
