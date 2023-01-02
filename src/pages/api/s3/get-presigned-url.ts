@@ -11,9 +11,9 @@ export const config = {
 };
 
 const s3 = new S3({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+  region: process.env.S3_AWS_REGION,
+  accessKeyId: process.env.S3_AWS_ACCESS_KEY_ID as string,
+  secretAccessKey: process.env.S3_AWS_SECRET_ACCESS_KEY as string,
   signatureVersion: "v4",
 });
 
