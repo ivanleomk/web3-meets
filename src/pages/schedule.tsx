@@ -49,7 +49,7 @@ const Schedule = () => {
                 <li
                   key={meeting.id}
                   className="relative grid grid-cols-5 space-x-6 py-6 xl:static"
-                >
+              >
                   <EventCard event={meeting} />
                 </li>
               ))

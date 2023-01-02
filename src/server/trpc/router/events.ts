@@ -33,11 +33,7 @@ export const eventRouter = router({
           freeEvent: input.freeEvent,
           online: input.online,
           organiserName: input.organiserName,
-          City: {
-            connect: {
-              name: input.city,
-            },
-          },
+          cityName: input.city,
           user: {
             connect: {
               id: input.user,
